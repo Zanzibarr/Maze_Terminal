@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Terminal Maze" target="18" />
+      <module name="Terminal Maze" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

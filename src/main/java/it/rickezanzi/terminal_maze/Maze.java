@@ -53,11 +53,12 @@ public class Maze {
             System.out.println("Loops: "+loops/*/rep*/);
             System.out.println("MDN: "+mdn/*/rep*/);
             System.out.println("Act_Difficulty: "+act_diff/*/rep*/);
-            System.out.println("Creation_init: "+creation_init[0]*maze_size+creation_init[1]);
+            System.out.println("Creation_init: "+((int)creation_init[0]*maze_size+creation_init[1])+"("+creation_init[0]+";"+creation_init[1]+")");
             System.out.println();
 
         //}
         m.show();
+        System.out.println(find_path(maze[0][0], maze[maze_size-1][maze_size-1]));
         /*Scanner in = new Scanner(System.in);
         while(true) {
             m.show_window();
