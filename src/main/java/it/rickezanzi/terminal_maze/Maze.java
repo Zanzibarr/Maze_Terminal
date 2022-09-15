@@ -20,8 +20,10 @@ public class Maze {
     private static int visited_cells;
     private static int max_loops;
     private static int loop_count;
+    private static int loop_requests;
 
 
+    private static int[] creation_init;
     //current position of the player
     private static int[] player;
     //current position of the finish
@@ -35,27 +37,28 @@ public class Maze {
             double loops = 0;
             double mdn = 0;
             double act_diff = 0;
-            int rep = 10;
-            for (int j = 0; j < rep; j++) {
+            //int rep = (new Scanner(System.in)).nextInt();
+            //for (int j = 0; j < rep; j++) {
                 m = new Maze();
                 m.set_difficulty(diff);
                 m.create();
                 loops += loop_count;
                 double act_mdn = medium_distance_neighborg();
                 mdn += act_mdn;
-                act_diff += (maze_size * loop_count * act_mdn / (visual_size * loop_count));
-            }
+                act_diff += (maze_size * act_mdn / (visual_size * loop_count));
+            //}
             System.out.println("Difficulty: "+diff);
             System.out.println("Maze size: "+maze_size);
             System.out.println("Visual size: "+visual_size);
-            System.out.println("Loops: "+loops/rep);
-            System.out.println("MDN: "+mdn/rep);
-            System.out.println("Act_Difficulty: "+act_diff/rep);
+            System.out.println("Loops: "+loops/*/rep*/);
+            System.out.println("MDN: "+mdn/*/rep*/);
+            System.out.println("Act_Difficulty: "+act_diff/*/rep*/);
+            System.out.println("Creation_init: "+creation_init[0]*maze_size+creation_init[1]);
             System.out.println();
 
         //}
-        /*m.show();
-        Scanner in = new Scanner(System.in);
+        m.show();
+        /*Scanner in = new Scanner(System.in);
         while(true) {
             m.show_window();
             System.out.println("move: ");
@@ -86,8 +89,8 @@ public class Maze {
                 maze[i][j] = new Cell(i, j);
 
         visual_size = difficulty * 22;
-
-        max_loops = (int) (difficulty * 3);
+        max_loops = difficulty * 10;
+        loop_requests = 0;
 
     }
 
@@ -103,6 +106,7 @@ public class Maze {
         int row = rand.nextInt(1, maze_size - 1);
         int col = rand.nextInt(1, maze_size - 1);
         Cell cell = maze[row][col];
+        creation_init = new int[]{row, col};
 
         list.add(cell);
 
@@ -126,8 +130,6 @@ public class Maze {
                 visited_cells++;
             }
         }
-
-        System.out.println(visited_cells+" cells created");
 
     }
     //endregion
@@ -267,13 +269,12 @@ public class Maze {
 
     private void create_loop(Cell _cell) {
 
-        Random rand = new Random();
-        int prob = (int) Math.pow(visited_cells, (max_loops - loop_count) / 1.22);
+        loop_requests++;
 
-        if (loop_count >= max_loops || prob > rand.nextInt((int) Math.pow(Math.pow(maze_size, 2), max_loops)))
+        int presumed_loops = (int) Math.pow(difficulty, 2) * 110;
+
+        if (loop_count >= max_loops || loop_requests < presumed_loops * (loop_count + 1) / (loop_count + 2))
             return;
-
-        System.out.println("Loop created at "+visited_cells+" iteration.");
 
         loop_count++;
 
