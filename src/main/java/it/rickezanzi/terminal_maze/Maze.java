@@ -17,6 +17,8 @@ public class Maze {
     private static final int SIZE_PER_UNIT = 33;
     private static int difficulty;
     //private static double looping_generator_probability;
+    private static int visited_cells;
+    private static int max_loops;
     private static int loop_count;
 
 
@@ -28,34 +30,37 @@ public class Maze {
     public static void main(String args[]) {
 
         Maze m;
+        int diff = (new Scanner(System.in)).nextInt();
         //for (int i = 1; i < 10; i++) {
             double loops = 0;
             double mdn = 0;
             double act_diff = 0;
-            //for (int j = 0; j < 100; j++) {
+            int rep = 10;
+            for (int j = 0; j < rep; j++) {
                 m = new Maze();
-                m.set_difficulty(1);
+                m.set_difficulty(diff);
                 m.create();
-                //loops += loop_count;
-                //mdn += medium_distance_neighborg();
-                //act_diff += (maze_size * loops * mdn / (visual_size * 400)) / 10000;
-            //}
-            /*System.out.println("Difficulty: "+i);
+                loops += loop_count;
+                double act_mdn = medium_distance_neighborg();
+                mdn += act_mdn;
+                act_diff += (maze_size * loop_count * act_mdn / (visual_size * loop_count));
+            }
+            System.out.println("Difficulty: "+diff);
             System.out.println("Maze size: "+maze_size);
             System.out.println("Visual size: "+visual_size);
-            System.out.println("Loops: "+loops/100);
-            System.out.println("MDN: "+mdn/100);
-            System.out.println("Act_Difficulty: "+act_diff/100);
-            System.out.println();*/
+            System.out.println("Loops: "+loops/rep);
+            System.out.println("MDN: "+mdn/rep);
+            System.out.println("Act_Difficulty: "+act_diff/rep);
+            System.out.println();
 
         //}
-        m.show();
+        /*m.show();
         Scanner in = new Scanner(System.in);
         while(true) {
             m.show_window();
             System.out.println("move: ");
             m.move_player(in.next().charAt(0));
-        }
+        }*/
 
     }
 
@@ -71,14 +76,18 @@ public class Maze {
 
     private void maze_initialization() {
 
-        maze_size = (int) (25 + 75 * Math.log10(difficulty));
+        visited_cells = 0;
+
+        maze_size = difficulty * 33;
         maze = new Cell[maze_size][maze_size];
 
         for (int i = 0; i < maze_size; i++)
             for (int j = 0; j < maze_size; j++)
                 maze[i][j] = new Cell(i, j);
 
-        visual_size = (int) (13 + Math.pow(maze_size, 2.01)/300);
+        visual_size = difficulty * 22;
+
+        max_loops = (int) (difficulty * 3);
 
     }
 
@@ -114,8 +123,11 @@ public class Maze {
                 moving_forward = true;
                 connect_cells(cell, next_cell);
                 list.push(next_cell);
+                visited_cells++;
             }
         }
+
+        System.out.println(visited_cells+" cells created");
 
     }
     //endregion
@@ -254,6 +266,14 @@ public class Maze {
     }
 
     private void create_loop(Cell _cell) {
+
+        Random rand = new Random();
+        int prob = (int) Math.pow(visited_cells, (max_loops - loop_count) / 1.22);
+
+        if (loop_count >= max_loops || prob > rand.nextInt((int) Math.pow(Math.pow(maze_size, 2), max_loops)))
+            return;
+
+        System.out.println("Loop created at "+visited_cells+" iteration.");
 
         loop_count++;
 
