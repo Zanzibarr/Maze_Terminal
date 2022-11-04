@@ -32,39 +32,45 @@ public class Maze {
     public static void main(String args[]) {
 
         Maze m;
-        int diff = (new Scanner(System.in)).nextInt();
-        //for (int i = 1; i < 10; i++) {
-            double loops = 0;
-            double mdn = 0;
-            double act_diff = 0;
-            //int rep = (new Scanner(System.in)).nextInt();
-            //for (int j = 0; j < rep; j++) {
-                m = new Maze();
-                m.set_difficulty(diff);
-                m.create();
-                loops += loop_count;
-                double act_mdn = medium_distance_neighborg();
-                mdn += act_mdn;
-                act_diff += (maze_size * act_mdn / (visual_size * loop_count));
-            //}
-            System.out.println("Difficulty: "+diff);
-            System.out.println("Maze size: "+maze_size);
-            System.out.println("Visual size: "+visual_size);
-            System.out.println("Loops: "+loops/*/rep*/);
-            System.out.println("MDN: "+mdn/*/rep*/);
-            System.out.println("Act_Difficulty: "+act_diff/*/rep*/);
-            System.out.println("Creation_init: "+((int)creation_init[0]*maze_size+creation_init[1])+"("+creation_init[0]+";"+creation_init[1]+")");
-            System.out.println();
 
-        //}
-        m.show();
-        System.out.println(find_path(maze[0][0], maze[maze_size-1][maze_size-1]));
-        /*Scanner in = new Scanner(System.in);
-        while(true) {
+        System.out.print("Difficoltà: ");
+        Scanner in = new Scanner(System.in);
+        int diff = in.nextInt();
+
+        m = new Maze();
+        m.set_difficulty(diff);
+
+        m.create();
+
+        double mdn = medium_distance_neighborg();
+        double act_diff = (maze_size * mdn / (visual_size * loop_count));
+
+        System.out.println("Difficulty: "+diff);
+        System.out.println("Maze size: "+maze_size);
+        System.out.println("Visual size: "+visual_size);
+        System.out.println("Loops: "+loop_count);
+        System.out.println("MDN: "+mdn);
+        System.out.println("Act_Difficulty: "+act_diff);
+        System.out.println("Creation_init: "+((int)creation_init[0]*maze_size+creation_init[1])+"("+creation_init[0]+";"+creation_init[1]+")");
+        System.out.println();
+
+        m.show_window();
+
+        System.out.print("Inserire direzione o condizione d'uscita: ");
+        String input = in.next();
+        char command = ' ';
+        int index = 0;
+        while(command!='q') {
+            command = input.charAt(index++);
+            m.move_player(command);
             m.show_window();
-            System.out.println("move: ");
-            m.move_player(in.next().charAt(0));
-        }*/
+            if (index >= input.length()) {
+                System.out.print("Inserire direzione o condizione d'uscita: ");
+                input += in.next();
+            }
+        }
+
+        System.out.println(find_path(maze[0][0], maze[maze_size-1][maze_size-1]));
 
     }
 
@@ -132,10 +138,20 @@ public class Maze {
             }
         }
 
+        int[] pos = {(new Random()).nextInt(maze_size-1),(new Random()).nextInt(maze_size-1)};
+        set_player(pos);
+
     }
     //endregion
 
     //region movements
+
+    public void set_player(int[] _pos) {
+
+        player = _pos;
+
+    }
+
     public void move_player(char _direction) {
 
         int[] new_coords = new int[2];
@@ -199,6 +215,8 @@ public class Maze {
             }
             System.out.println();
         }
+
+        System.out.println("\n");
 
     }
 
